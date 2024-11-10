@@ -3,8 +3,9 @@ declare(strict_types=1);
 
 namespace Fyre\Security;
 
-use Fyre\Cache\Cache;
+use Fyre\Cache\CacheManager;
 use Fyre\Cache\Handlers\FileCacher;
+use Fyre\Container\Container;
 use Fyre\Server\ClientResponse;
 use Fyre\Server\ServerRequest;
 
@@ -32,7 +33,11 @@ class RateLimiter
         'errorResponse' => null,
     ];
 
+    protected CacheManager $cacheManager;
+
     protected int $calls = 0;
+
+    protected Container $container;
 
     protected array $options;
 
@@ -41,10 +46,15 @@ class RateLimiter
     /**
      * New RateLimiter constructor.
      *
+     * @param Container $container The Container.
+     * @param CacheManager $cacheManager The CacheManager.
      * @param array $options Options for the RateLimiter.
      */
-    public function __construct(array $options)
+    public function __construct(Container $container, CacheManager $cacheManager, array $options)
     {
+        $this->container = $container;
+        $this->cacheManager = $cacheManager;
+
         $this->options = array_replace_recursive(static::$defaults, $options);
 
         $this->options['identifier'] ??= fn(ServerRequest $request): string => $request->getServer('REMOTE_ADDR');
@@ -61,8 +71,8 @@ class RateLimiter
             };
         };
 
-        if (!Cache::hasConfig($this->options['cacheConfig'])) {
-            Cache::setConfig($this->options['cacheConfig'], [
+        if (!$this->cacheManager->hasConfig($this->options['cacheConfig'])) {
+            $this->cacheManager->setConfig($this->options['cacheConfig'], [
                 'className' => FileCacher::class,
                 'prefix' => $this->options['cacheConfig'].'.',
             ]);
@@ -90,7 +100,7 @@ class RateLimiter
     }
 
     /**
-     * Check rate limits.
+     * Determine whether the rate limit has been reached for a request.
      *
      * @param ServerRequest $request The ServerRequest.
      * @return bool TRUE if the rate limit has not been reached, otherwise FALSE.
@@ -105,7 +115,7 @@ class RateLimiter
         $expire = (int) $this->options['period'];
         $now = time();
 
-        $cacher = Cache::use($this->options['cacheConfig']);
+        $cacher = $this->cacheManager->use($this->options['cacheConfig']);
         $data = $cacher->get($key);
 
         if ($data === null || $now > $data[1]) {
@@ -131,7 +141,7 @@ class RateLimiter
      */
     public function errorResponse(ServerRequest $request): ClientResponse
     {
-        $response = (new ClientResponse())
+        $response = $this->container->build(ClientResponse::class)
             ->setStatusCode(429)
             ->setHeader('Retry-After', (string) ($this->reset - time()));
 

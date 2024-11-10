@@ -5,7 +5,7 @@
 
 ## Table Of Contents
 - [Installation](#installation)
-- [Rate Limiter Creation](#rate-limiter-creation)
+- [Basic Usage](#basic-usage)
 - [Methods](#methods)
 - [Middleware](#middleware)
 
@@ -25,8 +25,10 @@ In PHP:
 use Fyre\Security\RateLimiter;
 ```
 
-## Rate Limiter Creation
+## Basic Usage
 
+- `$container` is a [*Container*](https://github.com/elusivecodes/FyreContainer).
+- `$cacheManager` is a [*CacheManager*](https://github.com/elusivecodes/FyreCache).
 - `$options` is an array containing options for the *RateLimiter*.
     - `cacheConfig` is a string representing the configuration key for the [*Cache*](https://github.com/elusivecodes/FyreCache), and will default to "*ratelimiter*".
     - `limit` is a number representing the maximum number of requests that can be made within the period, and will default to *60*.
@@ -41,12 +43,22 @@ use Fyre\Security\RateLimiter;
     - `errorResponse` is a *Closure* that accepts a [*ServerRequest*](https://github.com/elusivecodes/FyreServer#server-requests) and a [*ClientResponse*](https://github.com/elusivecodes/FyreServer#client-responses) as the arguments, and should return a [*ClientResponse*](https://github.com/elusivecodes/FyreServer#client-responses).
 
 ```php
-$limiter = new RateLimiter($options);
+$limiter = new RateLimiter($container, $cacheManager, $options);
 ```
+
+If the `cacheConfig` doesn't exist in the [*CacheManager*](https://github.com/elusivecodes/FyreCache), a default [*FileCacher*](https://github.com/elusivecodes/FyreCache#file) will be created instead.
 
 If the `identifier` callback is omitted, it will default to using the `$_SERVER['REMOTE_ADDR']`.
 
 If the `errorResponse` callback is omitted, it will default to negotiating a json or plaintext response containing the `message` option.
+
+**Autoloading**
+
+Any dependencies will be injected automatically when loading from the [*Container*](https://github.com/elusivecodes/FyreContainer).
+
+```php
+$limiter = $container->use(RateLimiter::class, ['options' => $options]);
+```
 
 ## Methods
 
@@ -62,7 +74,7 @@ $response = $limiter->addHeaders($response);
 
 **Check Limit**
 
-Check rate limits.
+Determine whether the rate limit has been reached for a request.
 
 - `$request` is the [*ServerRequest*](https://github.com/elusivecodes/FyreServer#server-requests).
 
@@ -87,6 +99,7 @@ $response = $limiter->errorResponse($request);
 use Fyre\Security\Middleware\RateLimiterMiddleware;
 ```
 
+- `$container` is a [*Container*](https://github.com/elusivecodes/FyreContainer).
 - `$options` is an array containing options for the *RateLimiter*.
     - `cacheConfig` is a string representing the configuration key for the [*Cache*](https://github.com/elusivecodes/FyreCache), and will default to "*ratelimiter*".
     - `limit` is a number representing the maximum number of requests that can be made within the period, and will default to *60*.
@@ -101,8 +114,10 @@ use Fyre\Security\Middleware\RateLimiterMiddleware;
     - `errorResponse` is a *Closure* that accepts a [*ServerRequest*](https://github.com/elusivecodes/FyreServer#server-requests) and a [*ClientResponse*](https://github.com/elusivecodes/FyreServer#client-responses) as the arguments, and should return a [*ClientResponse*](https://github.com/elusivecodes/FyreServer#client-responses).
 
 ```php
-$middleware = new RateLimiterMiddleware($options);
+$middleware = new RateLimiterMiddleware($container, $options);
 ```
+
+If the `cacheConfig` doesn't exist in the [*CacheManager*](https://github.com/elusivecodes/FyreCache), a default [*FileCacher*](https://github.com/elusivecodes/FyreCache#file) will be created instead.
 
 If the `identifier` callback is omitted, it will default to using the `$_SERVER['REMOTE_ADDR']`.
 
