@@ -50,7 +50,7 @@ class RateLimiter
      * @param CacheManager $cacheManager The CacheManager.
      * @param array $options Options for the RateLimiter.
      */
-    public function __construct(Container $container, CacheManager $cacheManager, array $options)
+    public function __construct(Container $container, CacheManager $cacheManager, array $options = [])
     {
         $this->container = $container;
         $this->cacheManager = $cacheManager;

@@ -22,7 +22,7 @@
     "require": {
         "fyre/cache": "^5.0",
         "fyre/container": "^1.0",
-        "fyre/middleware": "^3.0",
+        "fyre/middleware": "^4.0",
         "fyre/server": "^3.0"
     },
     "require-dev": {
