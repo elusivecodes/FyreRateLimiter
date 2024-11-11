@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Fyre\Security\Middleware;
 
 use Closure;
+use Fyre\Container\Container;
 use Fyre\Middleware\Middleware;
 use Fyre\Security\RateLimiter;
 use Fyre\Server\ClientResponse;
@@ -21,9 +22,9 @@ class RateLimiterMiddleware extends Middleware
      *
      * @param RateLimiter $limiter The RateLimiter.
      */
-    public function __construct(RateLimiter $limiter)
+    public function __construct(Container $container, array $options = [])
     {
-        $this->limiter = $limiter;
+        $this->limiter = $container->build(RateLimiter::class, ['options' => $options]);
     }
 
     /**
@@ -33,7 +34,7 @@ class RateLimiterMiddleware extends Middleware
      * @param Closure $next The next handler.
      * @return ClientResponse The ClientResponse.
      */
-    public function __invoke(ServerRequest $request, Closure $next): ClientResponse
+    public function handle(ServerRequest $request, Closure $next): ClientResponse
     {
         if (!$this->limiter->checkLimit($request)) {
             return $this->limiter->errorResponse($request);

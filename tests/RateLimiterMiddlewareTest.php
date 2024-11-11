@@ -9,7 +9,6 @@ use Fyre\Container\Container;
 use Fyre\Middleware\MiddlewareQueue;
 use Fyre\Middleware\RequestHandler;
 use Fyre\Security\Middleware\RateLimiterMiddleware;
-use Fyre\Security\RateLimiter;
 use Fyre\Server\ClientResponse;
 use Fyre\Server\ServerRequest;
 use PHPUnit\Framework\TestCase;
@@ -25,13 +24,12 @@ final class RateLimiterMiddlewareTest extends TestCase
 
     public function testCheckRateLimit(): void
     {
-        $rateLimiter = $this->container->build(RateLimiter::class, [
+        $middleware = $this->container->build(RateLimiterMiddleware::class, [
             'options' => [
                 'limit' => 10,
                 'period' => 10,
             ],
         ]);
-        $middleware = new RateLimiterMiddleware($rateLimiter);
 
         $queue = new MiddlewareQueue();
         $queue->add($middleware);
@@ -71,13 +69,12 @@ final class RateLimiterMiddlewareTest extends TestCase
     public function testError(): void
     {
         for ($i = 0; $i <= 10; $i++) {
-            $rateLimiter = $this->container->build(RateLimiter::class, [
+            $middleware = $this->container->build(RateLimiterMiddleware::class, [
                 'options' => [
                     'limit' => 10,
                     'period' => 10,
                 ],
             ]);
-            $middleware = new RateLimiterMiddleware($rateLimiter);
 
             $queue = new MiddlewareQueue();
             $queue->add($middleware);
@@ -124,13 +121,12 @@ final class RateLimiterMiddlewareTest extends TestCase
     public function testErrorJson(): void
     {
         for ($i = 0; $i <= 10; $i++) {
-            $rateLimiter = $this->container->build(RateLimiter::class, [
+            $middleware = $this->container->build(RateLimiterMiddleware::class, [
                 'options' => [
                     'limit' => 10,
                     'period' => 10,
                 ],
             ]);
-            $middleware = new RateLimiterMiddleware($rateLimiter);
 
             $queue = new MiddlewareQueue();
             $queue->add($middleware);
@@ -179,14 +175,13 @@ final class RateLimiterMiddlewareTest extends TestCase
     public function testErrorMessage(): void
     {
         for ($i = 0; $i <= 10; $i++) {
-            $rateLimiter = $this->container->build(RateLimiter::class, [
+            $middleware = $this->container->build(RateLimiterMiddleware::class, [
                 'options' => [
                     'limit' => 10,
                     'period' => 10,
                     'message' => 'Too many requests',
                 ],
             ]);
-            $middleware = new RateLimiterMiddleware($rateLimiter);
 
             $queue = new MiddlewareQueue();
             $queue->add($middleware);
@@ -233,14 +228,13 @@ final class RateLimiterMiddlewareTest extends TestCase
     public function testErrorResponse(): void
     {
         for ($i = 0; $i <= 10; $i++) {
-            $rateLimiter = $this->container->build(RateLimiter::class, [
+            $middleware = $this->container->build(RateLimiterMiddleware::class, [
                 'options' => [
                     'limit' => 10,
                     'period' => 10,
                     'errorResponse' => fn(ServerRequest $request, ClientResponse $response): ClientResponse => $response->setBody('<h1>Too many requests</h1>'),
                 ],
             ]);
-            $middleware = new RateLimiterMiddleware($rateLimiter);
 
             $queue = new MiddlewareQueue();
             $queue->add($middleware);
@@ -286,7 +280,7 @@ final class RateLimiterMiddlewareTest extends TestCase
 
     public function testHeaders(): void
     {
-        $rateLimiter = $this->container->build(RateLimiter::class, [
+        $middleware = $this->container->build(RateLimiterMiddleware::class, [
             'options' => [
                 'limit' => 10,
                 'period' => 10,
@@ -297,7 +291,6 @@ final class RateLimiterMiddlewareTest extends TestCase
                 ],
             ],
         ]);
-        $middleware = new RateLimiterMiddleware($rateLimiter);
 
         $queue = new MiddlewareQueue();
         $queue->add($middleware);
@@ -337,14 +330,13 @@ final class RateLimiterMiddlewareTest extends TestCase
     public function testSetIdentifier(): void
     {
         for ($i = 0; $i <= 10; $i++) {
-            $rateLimiter = $this->container->build(RateLimiter::class, [
+            $middleware = $this->container->build(RateLimiterMiddleware::class, [
                 'options' => [
                     'limit' => 10,
                     'period' => 10,
                     'identifier' => fn(ServerRequest $request): string => 'user'.$i,
                 ],
             ]);
-            $middleware = new RateLimiterMiddleware($rateLimiter);
 
             $queue = new MiddlewareQueue();
             $queue->add($middleware);
@@ -370,14 +362,13 @@ final class RateLimiterMiddlewareTest extends TestCase
     public function testSkipCheck(): void
     {
         for ($i = 0; $i <= 10; $i++) {
-            $rateLimiter = $this->container->build(RateLimiter::class, [
+            $middleware = $this->container->build(RateLimiterMiddleware::class, [
                 'options' => [
                     'limit' => 10,
                     'period' => 10,
                     'skipCheck' => fn(ServerRequest $request): bool => true,
                 ],
             ]);
-            $middleware = new RateLimiterMiddleware($rateLimiter);
 
             $queue = new MiddlewareQueue();
             $queue->add($middleware);
