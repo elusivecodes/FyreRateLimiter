@@ -20,7 +20,8 @@ class RateLimiterMiddleware extends Middleware
     /**
      * New RateLimiterMiddleware constructor.
      *
-     * @param RateLimiter $limiter The RateLimiter.
+     * @param Container $container The Container.
+     * @param array $options Options for the RateLimiter.
      */
     public function __construct(Container $container, array $options = [])
     {
