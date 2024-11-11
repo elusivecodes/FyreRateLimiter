@@ -29,7 +29,7 @@ class RateLimiterMiddleware extends Middleware
     }
 
     /**
-     * Process a ServerRequest.
+     * Handle a ServerRequest.
      *
      * @param ServerRequest $request The ServerRequest.
      * @param Closure $next The next handler.

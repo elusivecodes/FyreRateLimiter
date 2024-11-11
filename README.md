@@ -126,6 +126,8 @@ $middleware = $container->build(RateLimiterMiddleware::class, ['options' => $opt
 
 **Handle**
 
+Handle a [*ServerRequest*](https://github.com/elusivecodes/FyreServer#server-requests).
+
 - `$request` is a [*ServerRequest*](https://github.com/elusivecodes/FyreServer#server-requests).
 - `$next` is a *Closure*.
 

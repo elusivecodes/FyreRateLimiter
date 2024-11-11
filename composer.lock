@@ -360,16 +360,16 @@
         },
         {
             "name": "fyre/middleware",
-            "version": "v5.0",
+            "version": "v5.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/elusivecodes/FyreMiddleware.git",
-                "reference": "4f533e5bffd627fcab7ae54e82eac8b6f6e12ca1"
+                "reference": "d2edf1f09e19ebf36d8c6842dbacf60f0a9e87a8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/elusivecodes/FyreMiddleware/zipball/4f533e5bffd627fcab7ae54e82eac8b6f6e12ca1",
-                "reference": "4f533e5bffd627fcab7ae54e82eac8b6f6e12ca1",
+                "url": "https://api.github.com/repos/elusivecodes/FyreMiddleware/zipball/d2edf1f09e19ebf36d8c6842dbacf60f0a9e87a8",
+                "reference": "d2edf1f09e19ebf36d8c6842dbacf60f0a9e87a8",
                 "shasum": ""
             },
             "require": {
@@ -400,9 +400,9 @@
             "description": "A middleware library.",
             "support": {
                 "issues": "https://github.com/elusivecodes/FyreMiddleware/issues",
-                "source": "https://github.com/elusivecodes/FyreMiddleware/tree/v5.0"
+                "source": "https://github.com/elusivecodes/FyreMiddleware/tree/v5.0.1"
             },
-            "time": "2024-11-11T09:45:43+00:00"
+            "time": "2024-11-11T10:03:17+00:00"
         },
         {
             "name": "fyre/negotiate",
