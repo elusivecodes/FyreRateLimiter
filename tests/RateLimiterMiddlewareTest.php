@@ -401,7 +401,7 @@ final class RateLimiterMiddlewareTest extends TestCase
         $this->cacheManager->setConfig('ratelimiter', [
             'className' => FileCacher::class,
             'path' => 'cache',
-            'prefix' => 'ratelimiter.',
+            'prefix' => 'ratelimiter:',
         ]);
     }
 

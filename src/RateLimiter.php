@@ -74,7 +74,7 @@ class RateLimiter
         if (!$this->cacheManager->hasConfig($this->options['cacheConfig'])) {
             $this->cacheManager->setConfig($this->options['cacheConfig'], [
                 'className' => FileCacher::class,
-                'prefix' => $this->options['cacheConfig'].'.',
+                'prefix' => $this->options['cacheConfig'].':',
             ]);
         }
     }
