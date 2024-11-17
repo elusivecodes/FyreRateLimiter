@@ -40,7 +40,7 @@ use Fyre\Security\RateLimiter;
         - `reset` is a string representing the rate limit reset header, and will default to "*X-RateLimit-Reset*".
     - `identifier` is a *Closure* that accepts a [*ServerRequest*](https://github.com/elusivecodes/FyreServer#server-requests) as the first argument, and should return a string representing the client identifier.
     - `skipCheck` is a *Closure* that accepts a [*ServerRequest*](https://github.com/elusivecodes/FyreServer#server-requests) as the first argument, and can return *true* to skip rate limit checks for the request.
-    - `errorResponse` is a *Closure* that accepts a [*ServerRequest*](https://github.com/elusivecodes/FyreServer#server-requests) and a [*ClientResponse*](https://github.com/elusivecodes/FyreServer#client-responses) as the arguments, and should return a [*ClientResponse*](https://github.com/elusivecodes/FyreServer#client-responses).
+    - `errorRenderer` is a *Closure* that accepts a [*ServerRequest*](https://github.com/elusivecodes/FyreServer#server-requests) and a [*ClientResponse*](https://github.com/elusivecodes/FyreServer#client-responses) as the arguments, and should return a [*ClientResponse*](https://github.com/elusivecodes/FyreServer#client-responses).
 
 ```php
 $limiter = new RateLimiter($container, $cacheManager, $options);
@@ -50,7 +50,7 @@ If the `cacheConfig` doesn't exist in the [*CacheManager*](https://github.com/el
 
 If the `identifier` callback is omitted, it will default to using the `$_SERVER['REMOTE_ADDR']`.
 
-If the `errorResponse` callback is omitted, it will default to negotiating a json or plaintext response containing the `message` option.
+If the `errorRenderer` callback is omitted, it will default to negotiating a json or plaintext response containing the `message` option.
 
 **Autoloading**
 
@@ -112,7 +112,7 @@ use Fyre\Security\Middleware\RateLimiterMiddleware;
         - `reset` is a string representing the rate limit reset header, and will default to "*X-RateLimit-Reset*".
     - `identifier` is a *Closure* that accepts a [*ServerRequest*](https://github.com/elusivecodes/FyreServer#server-requests) as the first argument, and should return a string representing the client identifier.
     - `skipCheck` is a *Closure* that accepts a [*ServerRequest*](https://github.com/elusivecodes/FyreServer#server-requests) as the first argument, and can return *true* to skip rate limit checks for the request.
-    - `errorResponse` is a *Closure* that accepts a [*ServerRequest*](https://github.com/elusivecodes/FyreServer#server-requests) and a [*ClientResponse*](https://github.com/elusivecodes/FyreServer#client-responses) as the arguments, and should return a [*ClientResponse*](https://github.com/elusivecodes/FyreServer#client-responses).
+    - `errorRenderer` is a *Closure* that accepts a [*ServerRequest*](https://github.com/elusivecodes/FyreServer#server-requests) and a [*ClientResponse*](https://github.com/elusivecodes/FyreServer#client-responses) as the arguments, and should return a [*ClientResponse*](https://github.com/elusivecodes/FyreServer#client-responses).
 
 ```php
 $middleware = new RateLimiterMiddleware($container, $options);

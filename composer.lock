@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a166bed7b6689953ff92e6210e43d884",
+    "content-hash": "2363bec7916ab8dee0c92bc777662702",
     "packages": [
         {
             "name": "fyre/array",
@@ -360,21 +360,21 @@
         },
         {
             "name": "fyre/middleware",
-            "version": "v5.0.1",
+            "version": "v6.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/elusivecodes/FyreMiddleware.git",
-                "reference": "d2edf1f09e19ebf36d8c6842dbacf60f0a9e87a8"
+                "reference": "90ca26e96089ea643393c3fae4b6d9ef8dbd7439"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/elusivecodes/FyreMiddleware/zipball/d2edf1f09e19ebf36d8c6842dbacf60f0a9e87a8",
-                "reference": "d2edf1f09e19ebf36d8c6842dbacf60f0a9e87a8",
+                "url": "https://api.github.com/repos/elusivecodes/FyreMiddleware/zipball/90ca26e96089ea643393c3fae4b6d9ef8dbd7439",
+                "reference": "90ca26e96089ea643393c3fae4b6d9ef8dbd7439",
                 "shasum": ""
             },
             "require": {
                 "fyre/container": "^1.0",
-                "fyre/server": "^3.0"
+                "fyre/server": "^4.0"
             },
             "require-dev": {
                 "friendsofphp/php-cs-fixer": "^3.59",
@@ -400,9 +400,9 @@
             "description": "A middleware library.",
             "support": {
                 "issues": "https://github.com/elusivecodes/FyreMiddleware/issues",
-                "source": "https://github.com/elusivecodes/FyreMiddleware/tree/v5.0.1"
+                "source": "https://github.com/elusivecodes/FyreMiddleware/tree/v6.0"
             },
-            "time": "2024-11-11T10:03:17+00:00"
+            "time": "2024-11-17T00:34:39+00:00"
         },
         {
             "name": "fyre/negotiate",
@@ -583,19 +583,20 @@
         },
         {
             "name": "fyre/server",
-            "version": "v3.3.5",
+            "version": "v4.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/elusivecodes/FyreServer.git",
-                "reference": "5ea71517d261e368e1615ca9f4d27c60eac4c252"
+                "reference": "02ea1860ce6c2160362470fcc815173ec11f4104"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/elusivecodes/FyreServer/zipball/5ea71517d261e368e1615ca9f4d27c60eac4c252",
-                "reference": "5ea71517d261e368e1615ca9f4d27c60eac4c252",
+                "url": "https://api.github.com/repos/elusivecodes/FyreServer/zipball/02ea1860ce6c2160362470fcc815173ec11f4104",
+                "reference": "02ea1860ce6c2160362470fcc815173ec11f4104",
                 "shasum": ""
             },
             "require": {
+                "fyre/config": "^4.1",
                 "fyre/cookie": "^4.0",
                 "fyre/filesystem": "^2.0",
                 "fyre/negotiate": "^2.0",
@@ -628,9 +629,9 @@
             "description": "A HTTP server request/response library.",
             "support": {
                 "issues": "https://github.com/elusivecodes/FyreServer/issues",
-                "source": "https://github.com/elusivecodes/FyreServer/tree/v3.3.5"
+                "source": "https://github.com/elusivecodes/FyreServer/tree/v4.0"
             },
-            "time": "2024-10-30T11:31:03+00:00"
+            "time": "2024-11-17T00:21:32+00:00"
         },
         {
             "name": "fyre/uri",

@@ -35,10 +35,12 @@ final class RateLimiterMiddlewareTest extends TestCase
         $queue->add($middleware);
 
         $handler = $this->container->build(RequestHandler::class, ['queue' => $queue]);
-        $request = new ServerRequest([
-            'globals' => [
-                'server' => [
-                    'REMOTE_ADDR' => '127.0.0.1',
+        $request = $this->container->build(ServerRequest::class, [
+            'options' => [
+                'globals' => [
+                    'server' => [
+                        'REMOTE_ADDR' => '127.0.0.1',
+                    ],
                 ],
             ],
         ]);
@@ -80,11 +82,13 @@ final class RateLimiterMiddlewareTest extends TestCase
             $queue->add($middleware);
 
             $handler = $this->container->build(RequestHandler::class, ['queue' => $queue]);
-            $request = new ServerRequest([
-                'globals' => [
-                    'server' => [
-                        'REMOTE_ADDR' => '127.0.0.1',
-                        'HTTP_ACCEPT' => 'text/html',
+            $request = $this->container->build(ServerRequest::class, [
+                'options' => [
+                    'globals' => [
+                        'server' => [
+                            'REMOTE_ADDR' => '127.0.0.1',
+                            'HTTP_ACCEPT' => 'text/html',
+                        ],
                     ],
                 ],
             ]);
@@ -132,11 +136,13 @@ final class RateLimiterMiddlewareTest extends TestCase
             $queue->add($middleware);
 
             $handler = $this->container->build(RequestHandler::class, ['queue' => $queue]);
-            $request = new ServerRequest([
-                'globals' => [
-                    'server' => [
-                        'REMOTE_ADDR' => '127.0.0.1',
-                        'HTTP_ACCEPT' => 'application/json',
+            $request = $this->container->build(ServerRequest::class, [
+                'options' => [
+                    'globals' => [
+                        'server' => [
+                            'REMOTE_ADDR' => '127.0.0.1',
+                            'HTTP_ACCEPT' => 'application/json',
+                        ],
                     ],
                 ],
             ]);
@@ -187,11 +193,13 @@ final class RateLimiterMiddlewareTest extends TestCase
             $queue->add($middleware);
 
             $handler = $this->container->build(RequestHandler::class, ['queue' => $queue]);
-            $request = new ServerRequest([
-                'globals' => [
-                    'server' => [
-                        'REMOTE_ADDR' => '127.0.0.1',
-                        'HTTP_ACCEPT' => 'text/html',
+            $request = $this->container->build(ServerRequest::class, [
+                'options' => [
+                    'globals' => [
+                        'server' => [
+                            'REMOTE_ADDR' => '127.0.0.1',
+                            'HTTP_ACCEPT' => 'text/html',
+                        ],
                     ],
                 ],
             ]);
@@ -232,7 +240,7 @@ final class RateLimiterMiddlewareTest extends TestCase
                 'options' => [
                     'limit' => 10,
                     'period' => 10,
-                    'errorResponse' => fn(ServerRequest $request, ClientResponse $response): ClientResponse => $response->setBody('<h1>Too many requests</h1>'),
+                    'errorRenderer' => fn(ServerRequest $request, ClientResponse $response): ClientResponse => $response->setBody('<h1>Too many requests</h1>'),
                 ],
             ]);
 
@@ -240,11 +248,13 @@ final class RateLimiterMiddlewareTest extends TestCase
             $queue->add($middleware);
 
             $handler = $this->container->build(RequestHandler::class, ['queue' => $queue]);
-            $request = new ServerRequest([
-                'globals' => [
-                    'server' => [
-                        'REMOTE_ADDR' => '127.0.0.1',
-                        'HTTP_ACCEPT' => 'text/html',
+            $request = $this->container->build(ServerRequest::class, [
+                'options' => [
+                    'globals' => [
+                        'server' => [
+                            'REMOTE_ADDR' => '127.0.0.1',
+                            'HTTP_ACCEPT' => 'text/html',
+                        ],
                     ],
                 ],
             ]);
@@ -296,10 +306,12 @@ final class RateLimiterMiddlewareTest extends TestCase
         $queue->add($middleware);
 
         $handler = $this->container->build(RequestHandler::class, ['queue' => $queue]);
-        $request = new ServerRequest([
-            'globals' => [
-                'server' => [
-                    'REMOTE_ADDR' => '127.0.0.1',
+        $request = $this->container->build(ServerRequest::class, [
+            'options' => [
+                'globals' => [
+                    'server' => [
+                        'REMOTE_ADDR' => '127.0.0.1',
+                    ],
                 ],
             ],
         ]);
@@ -342,10 +354,12 @@ final class RateLimiterMiddlewareTest extends TestCase
             $queue->add($middleware);
 
             $handler = $this->container->build(RequestHandler::class, ['queue' => $queue]);
-            $request = new ServerRequest([
-                'globals' => [
-                    'server' => [
-                        'REMOTE_ADDR' => '127.0.0.1',
+            $request = $this->container->build(ServerRequest::class, [
+                'options' => [
+                    'globals' => [
+                        'server' => [
+                            'REMOTE_ADDR' => '127.0.0.1',
+                        ],
                     ],
                 ],
             ]);
@@ -374,10 +388,12 @@ final class RateLimiterMiddlewareTest extends TestCase
             $queue->add($middleware);
 
             $handler = $this->container->build(RequestHandler::class, ['queue' => $queue]);
-            $request = new ServerRequest([
-                'globals' => [
-                    'server' => [
-                        'REMOTE_ADDR' => '127.0.0.1',
+            $request = $this->container->build(ServerRequest::class, [
+                'options' => [
+                    'globals' => [
+                        'server' => [
+                            'REMOTE_ADDR' => '127.0.0.1',
+                        ],
                     ],
                 ],
             ]);

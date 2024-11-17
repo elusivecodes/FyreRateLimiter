@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Fyre\Security;
 
+use Closure;
 use Fyre\Cache\CacheManager;
 use Fyre\Cache\Handlers\FileCacher;
 use Fyre\Container\Container;
@@ -28,10 +29,10 @@ class RateLimiter
             'remaining' => 'X-RateLimit-Remaining',
             'reset' => 'X-RateLimit-Reset',
         ],
-        'identifier' => null,
         'skipCheck' => null,
-        'errorResponse' => null,
     ];
+
+    protected string $cacheConfig;
 
     protected CacheManager $cacheManager;
 
@@ -39,9 +40,21 @@ class RateLimiter
 
     protected Container $container;
 
-    protected array $options;
+    protected Closure $errorRenderer;
+
+    protected array|null $headers = null;
+
+    protected Closure $identifier;
+
+    protected int $limit;
+
+    protected string $message;
+
+    protected int $period;
 
     protected int $reset = 0;
+
+    protected Closure|null $skipCheck;
 
     /**
      * New RateLimiter constructor.
@@ -55,26 +68,32 @@ class RateLimiter
         $this->container = $container;
         $this->cacheManager = $cacheManager;
 
-        $this->options = array_replace_recursive(static::$defaults, $options);
+        $options = array_replace_recursive(static::$defaults, $options);
 
-        $this->options['identifier'] ??= fn(ServerRequest $request): string => $request->getServer('REMOTE_ADDR');
-        $this->options['errorResponse'] ??= function(ServerRequest $request, ClientResponse $response): ClientResponse {
+        $this->cacheConfig = $options['cacheConfig'];
+        $this->limit = $options['limit'];
+        $this->period = $options['period'];
+        $this->message = $options['message'];
+        $this->headers = $options['headers'];
+        $this->identifier = $options['identifier'] ?? fn(ServerRequest $request): string => $request->getServer('REMOTE_ADDR');
+        $this->errorRenderer = $options['errorRenderer'] ?? function(ServerRequest $request, ClientResponse $response): ClientResponse {
             $contentType = $request->negotiate('content', ['text/html', 'application/json']);
 
             return match ($contentType) {
                 'application/json' => $response->setJson([
-                    'message' => $this->options['message'],
+                    'message' => $this->message,
                 ]),
                 default => $response
                     ->setContentType('text/plain')
-                    ->setBody($this->options['message'])
+                    ->setBody($this->message)
             };
         };
+        $this->skipCheck = $options['skipCheck'];
 
-        if (!$this->cacheManager->hasConfig($this->options['cacheConfig'])) {
-            $this->cacheManager->setConfig($this->options['cacheConfig'], [
+        if (!$this->cacheManager->hasConfig($this->cacheConfig)) {
+            $this->cacheManager->setConfig($this->cacheConfig, [
                 'className' => FileCacher::class,
-                'prefix' => $this->options['cacheConfig'].':',
+                'prefix' => $this->cacheConfig.':',
             ]);
         }
     }
@@ -87,16 +106,16 @@ class RateLimiter
      */
     public function addHeaders(ClientResponse $response): ClientResponse
     {
-        if (!$this->options['headers']) {
+        if (!$this->headers) {
             return $response;
         }
 
-        $remaining = max(0, $this->options['limit'] - $this->calls);
+        $remaining = max(0, $this->limit - $this->calls);
 
         return $response
-            ->setHeader($this->options['headers']['limit'], (string) $this->options['limit'])
-            ->setHeader($this->options['headers']['remaining'], (string) $remaining)
-            ->setHeader($this->options['headers']['reset'], (string) $this->reset);
+            ->setHeader($this->headers['limit'], (string) $this->limit)
+            ->setHeader($this->headers['remaining'], (string) $remaining)
+            ->setHeader($this->headers['reset'], (string) $this->reset);
     }
 
     /**
@@ -107,15 +126,15 @@ class RateLimiter
      */
     public function checkLimit(ServerRequest $request): bool
     {
-        if ($this->options['skipCheck'] && $this->options['skipCheck']($request) === true) {
+        if ($this->skipCheck && $this->container->call($this->skipCheck, ['request' => $request]) === true) {
             return true;
         }
 
-        $key = $this->options['identifier']($request);
-        $expire = (int) $this->options['period'];
+        $key = $this->container->call($this->identifier, ['request' => $request]);
+        $expire = (int) $this->period;
         $now = time();
 
-        $cacher = $this->cacheManager->use($this->options['cacheConfig']);
+        $cacher = $this->cacheManager->use($this->cacheConfig);
         $data = $cacher->get($key);
 
         if ($data === null || $now > $data[1]) {
@@ -130,7 +149,7 @@ class RateLimiter
 
         $cacher->save($key, [$this->calls, $this->reset], $expire);
 
-        return $this->calls <= $this->options['limit'];
+        return $this->calls <= $this->limit;
     }
 
     /**
@@ -147,6 +166,9 @@ class RateLimiter
 
         $response = $this->addHeaders($response);
 
-        return $this->options['errorResponse']($request, $response);
+        return $this->container->call($this->errorRenderer, [
+            'request' => $request,
+            'response' => $response,
+        ]);
     }
 }
