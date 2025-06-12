@@ -34,11 +34,7 @@ class RateLimiter
 
     protected string $cacheConfig;
 
-    protected CacheManager $cacheManager;
-
     protected int $calls = 0;
-
-    protected Container $container;
 
     protected Closure $errorRenderer;
 
@@ -63,11 +59,11 @@ class RateLimiter
      * @param CacheManager $cacheManager The CacheManager.
      * @param array $options Options for the RateLimiter.
      */
-    public function __construct(Container $container, CacheManager $cacheManager, array $options = [])
-    {
-        $this->container = $container;
-        $this->cacheManager = $cacheManager;
-
+    public function __construct(
+        protected Container $container,
+        protected CacheManager $cacheManager,
+        array $options = []
+    ) {
         $options = array_replace_recursive(static::$defaults, $options);
 
         $this->cacheConfig = $options['cacheConfig'];
